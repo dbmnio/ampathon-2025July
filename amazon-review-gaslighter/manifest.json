@@ -24,13 +24,17 @@
         "*://*.amazon.it/*",
         "*://*.amazon.es/*"
       ],
-      "js": ["review_templates.js", "content_script.js"],
-      "css": ["styles_css.css"],
+      "js": ["templates.js", "ai-generator.js", "content.js"],
+      "css": ["styles.css"],
       "run_at": "document_idle"
     }
   ],
   "action": {
-    "default_popup": "popup_html.html",
+    "default_popup": "popup.html",
     "default_title": "Amazon Review Gaslighter"
-  }
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "storage"
+  ]
 }

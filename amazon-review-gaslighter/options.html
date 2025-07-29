@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Amazon Review Gaslighter - Options</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .logo {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+    
+    .section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .section h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    
+    input[type="text"]:focus, input[type="password"]:focus, select:focus {
+      outline: none;
+      border-color: #ff9500;
+    }
+    
+    .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background: #ff9500;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #e6850e;
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    
+    .btn-test {
+      background: #28a745;
+      color: white;
+    }
+    
+    .btn-test:hover {
+      background: #218838;
+    }
+    
+    .status {
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-weight: bold;
+      display: none;
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    .warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    
+    .feature-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .feature-box {
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      text-align: center;
+    }
+    
+    .feature-box.active {
+      border-color: #ff9500;
+      background: #fff8f0;
+    }
+    
+    .feature-box h4 {
+      margin-top: 0;
+      color: #333;
+    }
+    
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🤖📝</div>
+    <div class="title">Amazon Review Gaslighter</div>
+    <div class="subtitle">Configuration & Settings</div>
+  </div>
+  
+  <div class="warning">
+    <strong>⚠️ Privacy Notice:</strong> Your API key is stored locally in your browser and never sent to our servers. 
+    It's only used to make direct requests to OpenAI from your browser.
+  </div>
+  
+  <div class="section">
+    <h3>🧠 AI Review Generation</h3>
+    <p>Add your OpenAI API key to enable AI-generated reviews instead of templates.</p>
+    
+    <div class="form-group">
+      <label for="apiKey">OpenAI API Key:</label>
+      <input type="password" id="apiKey" placeholder="sk-...">
+      <div class="help-text">
+        Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="model">AI Model:</label>
+      <select id="model">
+        <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Cheaper)</option>
+        <option value="gpt-4o-mini">GPT-4o Mini (Better)</option>
+        <option value="gpt-4o">GPT-4o (Best)</option>
+      </select>
+      <div class="help-text">
+        GPT-3.5 Turbo: ~$0.001 per review | GPT-4o Mini: ~$0.003 per review
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button id="testBtn" class="btn-test">Test API Key</button>
+      <button id="saveBtn" class="btn-primary">Save Settings</button>
+      <button id="clearBtn" class="btn-secondary">Clear API Key</button>
+    </div>
+    
+    <div id="status" class="status"></div>
+  </div>
+  
+  <div class="section">
+    <h3>⚙️ Review Generation Mode</h3>
+    
+    <div class="feature-comparison">
+      <div class="feature-box" id="templateMode">
+        <h4>📝 Template Mode</h4>
+        <p><strong>Current:</strong> Fast, free, funny templates</p>
+        <ul style="text-align: left; font-size: 14px;">
+          <li>No API key required</li>
+          <li>Instant generation</li>
+          <li>6 humor categories</li>
+          <li>Completely free</li>
+        </ul>
+      </div>
+      
+      <div class="feature-box" id="aiMode">
+        <h4>🤖 AI Mode</h4>
+        <p><strong>Upgrade:</strong> Unique AI-generated reviews</p>
+        <ul style="text-align: left; font-size: 14px;">
+          <li>Requires OpenAI API key</li>
+          <li>Unique every time</li>
+          <li>Context-aware humor</li>
+          <li>Small cost (~$0.001/review)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="section">
+    <h3>🎛️ Advanced Settings</h3>
+    
+    <div class="form-group">
+      <label for="creativity">AI Creativity Level:</label>
+      <select id="creativity">
+        <option value="0.7">Conservative (More coherent)</option>
+        <option value="1.0" selected>Balanced (Recommended)</option>
+        <option value="1.3">Wild (More chaotic)</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="cacheTime">Cache Duration (minutes):</label>
+      <select id="cacheTime">
+        <option value="0">No caching</option>
+        <option value="5">5 minutes</option>
+        <option value="15" selected>15 minutes</option>
+        <option value="60">1 hour</option>
+      </select>
+      <div class="help-text">
+        Cache AI responses to save on API costs when revisiting the same product
+      </div>
+    </div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

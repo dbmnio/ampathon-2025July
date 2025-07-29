@@ -1,9 +1,40 @@
-// Amazon Review Gaslighter - Content Script
+  // Process all reviews on the page
+  async function processReviews() {
+    if (!isEnabled) return;
+    
+    const productName = getProductName();
+    const reviewElements = findReviewElements();
+    
+    console.log(`Gaslighter: Found ${reviewElements.length} reviews for product: ${productName}`);
+    
+    // Process reviews in small batches to avoid overwhelming the API
+    const batchSize = 3;
+    for (let i = 0; i < reviewElements.length; i += batchSize) {
+      const batch = reviewElements.slice(i, i + batchSize);
+      
+      // Process batch concurrently
+      const promises = batch.map(element => replaceReview(element, productName));
+      await Promise.all(promises);
+      
+      // Small delay between batches to be nice to the API
+      if (i + batchSize < reviewElements.length && aiGenerator && aiGenerator.isAvailable()) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+  }// Amazon Review Gaslighter - Content Script
 (function() {
   'use strict';
   
   let isEnabled = true;
   let processedReviews = new Set();
+  let aiGenerator = null;
+  
+  // Initialize AI generator
+  function initAI() {
+    if (typeof AIReviewGenerator !== 'undefined') {
+      aiGenerator = new AIReviewGenerator();
+    }
+  }
   
   // Extract product name from Amazon page
   function getProductName() {
@@ -58,26 +89,62 @@
   }
   
   // Replace review text with fake content
-  function replaceReview(element, productName) {
+  async function replaceReview(element, productName) {
     if (processedReviews.has(element)) return;
     
     const originalText = element.textContent;
-    const fakeReview = generateFakeReview(productName);
     
     // Store original text as data attribute
     element.setAttribute('data-original-text', originalText);
     element.setAttribute('data-gaslighter-processed', 'true');
     
-    // Replace the text
-    element.textContent = fakeReview;
-    
-    // Add a subtle indicator
+    // Show loading state
+    element.textContent = 'Generating hilarious review...';
     element.style.fontStyle = 'italic';
-    element.style.opacity = '0.95';
+    element.style.opacity = '0.7';
+    
+    let fakeReview;
+    
+    try {
+      // Try AI generation first if available
+      if (aiGenerator && aiGenerator.isAvailable()) {
+        try {
+          fakeReview = await aiGenerator.generateReview(productName);
+          element.setAttribute('data-review-type', 'ai');
+        } catch (aiError) {
+          console.warn('Gaslighter AI failed, falling back to templates:', aiError.message);
+          fakeReview = generateFakeReview(productName);
+          element.setAttribute('data-review-type', 'template');
+          
+          // Show AI error notification briefly
+          if (aiError.message.includes('quota') || aiError.message.includes('invalid')) {
+            showNotification(`AI Error: ${aiError.message}`, 'error');
+          }
+        }
+      } else {
+        // Fallback to template generation
+        fakeReview = generateFakeReview(productName);
+        element.setAttribute('data-review-type', 'template');
+      }
+      
+      // Replace the text
+      element.textContent = fakeReview;
+      element.style.opacity = '0.95';
+      
+    } catch (error) {
+      console.error('Gaslighter: Error generating review:', error);
+      // Fallback to original text
+      element.textContent = originalText;
+      element.style.fontStyle = '';
+      element.style.opacity = '';
+      element.removeAttribute('data-gaslighter-processed');
+      return;
+    }
     
     processedReviews.add(element);
     
-    console.log('Gaslighter: Replaced review:', originalText.substring(0, 50) + '...');
+    const reviewType = element.getAttribute('data-review-type');
+    console.log(`Gaslighter: Replaced review (${reviewType}):`, originalText.substring(0, 50) + '...');
   }
   
   // Restore original review text
