@@ -1,0 +1,30 @@
+/* Amazon Review Gaslighter - Styles */
+
+/* Subtle styling for replaced reviews */
+[data-gaslighter-processed="true"] {
+  position: relative;
+}
+
+/* Add a tiny indicator that this review has been "enhanced" */
+[data-gaslighter-processed="true"]::before {
+  content: "🤖";
+  position: absolute;
+  right: -20px;
+  top: 0;
+  font-size: 12px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Ensure the fake reviews look natural */
+[data-gaslighter-processed="true"] {
+  font-style: italic !important;
+  opacity: 0.95 !important;
+}
+
+/* Hide the robot emoji on mobile to prevent layout issues */
+@media (max-width: 768px) {
+  [data-gaslighter-processed="true"]::before {
+    display: none;
+  }
+}
